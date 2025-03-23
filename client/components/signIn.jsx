@@ -1,8 +1,27 @@
 import React from 'react';
 import { GlassPanel,GlassButton,GlassCard,GlassInput} from "../components/ui/glassMorphic";
 import { Check, ArrowRight } from 'lucide-react';
-
+import { useEffect } from 'react';
+import axios from 'axios';
+const BASE_URL = "http://localhost:3000/api/auth";
 const SignIn = () => {
+  const handleLogin = async () => {
+    window.open(`${BASE_URL}/google`, "_self");
+  };
+
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const response = await axios.get(`${BASE_URL}/user`, { withCredentials: true });
+  //       console.log("User data:", response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //     }
+  //   };
+
+  //   fetchUser();
+  // }, []);
+
   return (
     <section id="sign-in" className="py-16 px-4 relative">
       {/* Background elements - reduced opacity */}
@@ -22,7 +41,7 @@ const SignIn = () => {
                 <h3 className="text-xl font-semibold mb-6">Sign in with Google</h3>
                 
                 <GlassButton
-                  className="w-full bg-white text-gray-700 border border-gray-200 flex items-center justify-center gap-3 hover:bg-gray-50"
+                  className="w-full bg-white text-gray-700 border border-gray-200 flex items-center justify-center gap-3 hover:bg-gray-50" onClick={handleLogin}
                 >
                   <svg className="h-5 w-5" viewBox="0 0 24 24">
                     <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">

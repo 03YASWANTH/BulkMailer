@@ -1,10 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { GlassPanel,GlassButton,GlassCard,GlassInput } from "../components/ui/glassMorphic";
 import { Menu, X } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 
 const NavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+   const [isDarkMode, setIsDarkMode] = useState(false);
+    
+    // Initialize dark mode from localStorage on component mount
+    useEffect(() => {
+      const darkModePreference = window.localStorage.getItem('darkMode') === 'true';
+      setIsDarkMode(darkModePreference);
+      
+      if (darkModePreference) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }, []);
+    
+    // Scroll animation logic
+    useEffect(() => {
+      const handleScroll = () => {
+        const sections = document.querySelectorAll('section');
+        
+        sections.forEach((section) => {
+          const sectionTop = section.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+          
+          if (sectionTop < windowHeight * 0.75) {
+            section.classList.add('animate-fade-in');
+          }
+        });
+      };
+      
+      window.addEventListener('scroll', handleScroll);
+      // Trigger once on load
+      handleScroll();
+      
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, []);
+  
+    // Toggle dark mode function
+    const toggleDarkMode = () => {
+      const newDarkMode = !isDarkMode;
+      setIsDarkMode(newDarkMode);
+      window.localStorage.setItem('darkMode', newDarkMode.toString());
+      
+      if (newDarkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,6 +95,13 @@ const NavBar = () => {
           <GlassButton className="bg-gradient-to-r from-altpay-500 to-altpay-700 text-white border-0">
             Get Started
           </GlassButton>
+          <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 shadow-md hover:shadow-lg transition-all"
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? <Sun className="text-yellow-400" size={20} /> : <Moon className="text-gray-700" size={20} />}
+            </button>
         </div>
         
         {/* Mobile menu button */}
