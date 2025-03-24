@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import NavBar from '../components/NavBar';
-import Hero from '../components/Hero';
-import Features from '../components/Features';
-import Process from '../components/Process';
-import SignIn from '../components/SignIn';
-import Footer from '../components/Footer';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import Dashboard from "./pages/Home";
+import Friends from "./pages/Friends";
+import Scan from "./pages/ScanPayment";
 
-
-const Index = () => {
+function App() {
 
   return (
-    <div>
-      <NavBar />
-      <Hero />
-      <Features />
-      <Process />
-      <SignIn />
-      <Footer />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Scan/>} />
+        <Route path="/dashboard" element={<Friends/>} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
-export default Index;
+export default App;

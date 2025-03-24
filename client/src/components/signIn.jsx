@@ -1,13 +1,27 @@
 import React from 'react';
-import { GlassPanel,GlassButton,GlassCard,GlassInput} from "../components/ui/glassMorphic";
+import { GlassPanel,GlassButton,GlassCard,GlassInput} from "./ui/glassMorphic";
 import { Check, ArrowRight } from 'lucide-react';
 import { useEffect } from 'react';
 import axios from 'axios';
-const BASE_URL = "http://localhost:3000/api/auth";
+const BASE_URL = "http://localhost:3000/api";
+import { useNavigate,useSearchParams } from 'react-router-dom';
 const SignIn = () => {
-  const handleLogin = async () => {
-    window.open(`${BASE_URL}/google`, "_self");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const handleLogin = () => {
+    window.open(`${BASE_URL}/auth/google`, "_self");
   };
+
+  // useEffect(() => {
+  //   // If there's a token in the URL, store it and navigate
+  //   const token = searchParams.get("token");
+
+  //   if (token) {
+  //     localStorage.setItem("authToken", token);
+  //     navigate("/dashboard", { replace: true }); // Clean URL
+  //   }
+  // }, [searchParams, navigate]);
 
   // useEffect(() => {
   //   const fetchUser = async () => {
