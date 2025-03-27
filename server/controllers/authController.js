@@ -13,18 +13,16 @@ const generateToken = (user) => {
 };
 
 //Original Google login callback
-const googleCallback = async (req, res) => {
+const googleCallback =async (req, res) => {
   try {
     // Passport attaches user to req
     const token = generateToken(req.user);
-    
-    // For mobile apps, you might use a deep link here
-    // For web apps, redirect to frontend with token
-    res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
+    req.token = token;
+    res.redirect(`${process.env.FRONTEND_URL}/Scan?token=${token}`);
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: 'Authentication failed'
+      message: 'Authentication failed',
     });
   }
 };
@@ -95,7 +93,7 @@ const getCurrentUser = async (req, res) => {
     
     res.status(StatusCodes.OK).json({
       success: true,
-      data: { user }
+      data: { user:user}
     });
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

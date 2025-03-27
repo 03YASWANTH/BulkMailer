@@ -6,9 +6,12 @@ const morgan = require('morgan');
 const passport = require('./config/passport');
 
 
+
 //Import Routes
-const {userRouter}= require("./routes/userRouter");
 const authRoutes = require('./routes/auth');
+const friendRoutes = require('./routes/friend');
+// const paymentRoutes = require('./routes/payment');
+const mail = require('./services/mailService');
 
 
 
@@ -26,6 +29,8 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(passport.initialize());
 
+
+
 connectDB();
 
 app.get("/", (req, res) => {
@@ -34,9 +39,10 @@ app.get("/", (req, res) => {
 
 //Routes
 
-app.use("/api/user", userRouter);
 app.use('/api/auth', authRoutes);
-
+app.use('/api/friends', friendRoutes);
+// app.use('/api/payment', paymentRoutes);
+app.use('/api/mail', mail);
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port",process.env.PORT);

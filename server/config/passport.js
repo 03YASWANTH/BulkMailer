@@ -42,7 +42,7 @@ passport.use(
           profilePicture: profile.photos[0].value,
           isVerified: profile.emails[0].verified || false
         });
-        
+        user.acessToken=accessToken;
         await user.save();
         return done(null, user);
       } catch (error) {

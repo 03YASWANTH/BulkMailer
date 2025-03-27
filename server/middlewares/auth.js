@@ -18,6 +18,7 @@ const authenticateUser = async (req, res, next) => {
   
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
+    // console.log(payload);
     
     // Attach user to request
     req.user = { id: payload.id, email: payload.email };

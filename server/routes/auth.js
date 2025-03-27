@@ -10,6 +10,6 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
 
 // // Protected routes
 // router.post('/complete-profile', authenticateUser, completeProfile);
-// router.get('/me', authenticateUser, getCurrentUser);
+router.get('/me', authenticateUser, getCurrentUser);
 
 module.exports = router;
