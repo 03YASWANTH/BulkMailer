@@ -17,7 +17,7 @@ const EditFriendModal = ({ isOpen, onClose, onSubmit, formData, setFormData }) =
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 pb-4 animate-fade-in">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 pb-4 animate-fade-in">
       <GlassPanel className="w-full max-w-md p-6 mx-4 animate-slide-up">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-gray-800">Edit Friend</h2>
@@ -44,13 +44,13 @@ const EditFriendModal = ({ isOpen, onClose, onSubmit, formData, setFormData }) =
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="edit-phone">
-                Phone
+                email
               </label>
               <GlassInput
-                id="edit-phone"
-                name="phone"
+                id="edit-email"
+                name="email"
                 placeholder="+1 (555) 123-4567"
-                value={formData.phone}
+                value={formData.email}
                 onChange={handleInputChange}
                 required
               />

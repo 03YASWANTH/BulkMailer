@@ -6,7 +6,7 @@ const DeleteConfirmModal = ({ isOpen, friend, onClose, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 pb-4 animate-fade-in">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 pb-4 animate-fade-in">
       <GlassPanel className="w-full max-w-md p-6 mx-4 animate-slide-up">
         <div className="text-center mb-6">
           <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">

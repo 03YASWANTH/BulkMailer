@@ -4,13 +4,15 @@ import Dashboard from "./pages/Home";
 import Friends from "./pages/Friends";
 import Scan from "./pages/ScanPayment";
 
+
 function App() {
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Scan/>} />
+        <Route path="/" element={<Dashboard/>} />
         <Route path="/dashboard" element={<Friends/>} />
+        <Route path="/Scan" element={<Scan/>}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
