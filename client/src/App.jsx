@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useContext } from "react";
 import Dashboard from "./pages/Home";
 import Friends from "./pages/Friends";
-import Scan from "./pages/ScanPayment";
+import Mail from "./pages/BulkMailer";
 
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard/>} />
         <Route path="/dashboard" element={<Friends/>} />
-        <Route path="/Scan" element={<Scan/>}/>
+        <Route path="/Mail" element={<Mail/>}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

@@ -1,93 +1,133 @@
 const express = require('express');
+const multer = require('multer');
 const nodemailer = require('nodemailer');
+const { authenticateUser } = require('../middlewares/auth');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const router = express.Router();
-require('dotenv').config(); // Load environment variables
 
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = process.env.SMTP_PORT || 587;
-const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASS = process.env.SMTP_PASS;
-const EMAIL_FROM = process.env.EMAIL_FROM;
+// Multer for file uploads (memory storage)
+const upload = multer({ storage: multer.memoryStorage() });
 
-/**
- * Configure Nodemailer Transporter
- */
+// Create a single, reliable transporter using an admin email account
 const transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: SMTP_PORT,
-    secure:false, // true for SSL, false for TLS
+    service: 'gmail',
     auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASS,
-    },
+        user: process.env.ADMIN_EMAIL,
+        pass: process.env.ADMIN_EMAIL_PASSWORD
+    }
 });
 
-/**
- * Route to send payment request email
- */
-router.post('/send-payment-request', async (req, res) => {
-    const { email, requesterName, amount } = req.body;
-
-    console.log("Received Data:", req.body);
-
-    if (!email || !requesterName || !amount) {
-        return res.status(400).json({ success: false, error: "Missing required parameters" });
-    }
-
+router.post('/send-bulk-email', authenticateUser, upload.array('attachments'), async (req, res) => {
     try {
-        const mailOptions = {
-            from: EMAIL_FROM, // Sender's email
-            to: email, // Receiver's email
-            subject: `Payment Request from ${requesterName}`,
-            html: `
-                <p>Dear ${requesterName},</p>
+        const { recipients, subject, body, htmlBody } = req.body;
+        let recipientList;
+        
+        try {
+            recipientList = JSON.parse(recipients);
+        } catch (error) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid recipients format. Must be a valid JSON array.' 
+            });
+        }
 
-                <p><strong>Hi</strong> has requested a payment of <strong>₹${amount}</strong>.</p>
+        if (!recipientList || !Array.isArray(recipientList) || recipientList.length === 0) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Recipients list is required and must be an array' 
+            });
+        }
+        
+        if (!body || !body.trim()) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Email body cannot be empty' 
+            });
+        }
 
-                <p>You can complete the payment securely using the link below:</p>
+        if (!subject || !subject.trim()) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Email subject cannot be empty' 
+            });
+        }
 
-                <p><a href="" style="background-color:#007bff; color:white; padding:10px 15px; text-decoration:none; border-radius:5px;">Pay Now</a></p>
+        const senderName = req.user?.name || 'System User';
+        const replyTo = req.user?.email;
 
-                <p>If you have any questions, feel free to reply to this email.</p>
+        const attachments = req.files ? req.files.map(file => ({
+            filename: file.originalname,
+            content: file.buffer
+        })) : [];
 
-                <p>Best Regards,<br>AltPay Team</p>
+        const results = { 
+            total: recipientList.length, 
+            sent: 0, 
+            failed: 0, 
+            errors: [] 
+        };
+
+        // Send emails with rate limiting
+        for (const [index, recipient] of recipientList.entries()) {
+            try {
+                // Basic rate limiting to avoid Gmail's limits
+                if (index > 0 && index % 10 === 0) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
                 
-                <hr>
-                <p style="font-size:12px; color:gray;">If you didn't request this, please ignore this email. You can <a href="https://yourdomain.com/unsubscribe">unsubscribe</a> anytime.</p>
-            `,
-        };
+                const mailOptions = {
+                    from: `"${senderName}" <${process.env.ADMIN_EMAIL}>`,
+                    to: recipient,
+                    subject: subject,
+                    text: body,
+                    html: htmlBody || body.replace(/\n/g, '<br>'),
+                    attachments,
+                    ...(replyTo && { replyTo })
+                };
+                
+                const info = await transporter.sendMail(mailOptions);
+                console.log(`Email sent to ${recipient}: ${info.messageId}`);
+                results.sent++;
+            } catch (error) {
+                console.error(`Failed to send email to ${recipient}:`, error);
+                results.failed++;
+                results.errors.push({ 
+                    email: recipient, 
+                    error: error.message 
+                });
+            }
+        }
 
-        const info = await transporter.sendMail(mailOptions);
-        res.json({ success: true, messageId: info.messageId });
+        // Return appropriate response
+        if (results.sent === 0) {
+            return res.status(500).json({ 
+                success: false, 
+                message: 'Failed to send all emails', 
+                results 
+            });
+        } else if (results.failed > 0) {
+            return res.status(206).json({ 
+                success: true, 
+                message: `Sent ${results.sent} emails, failed ${results.failed}`, 
+                results 
+            });
+        } else {
+            return res.status(200).json({ 
+                success: true, 
+                message: `Successfully sent ${results.sent} emails`, 
+                results 
+            });
+        }
     } catch (error) {
-        console.error("Email sending failed:", error.message);
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-/**
- * Route to send payment confirmation email
- */
-router.post('/send-payment-confirmation', async (req, res) => {
-    const { email, friendName, amount } = req.body;
-
-    if (!email || !friendName || !amount) {
-        return res.status(400).json({ success: false, error: "Missing required parameters" });
-    }
-
-    try {
-        const mailOptions = {
-            from: EMAIL_FROM,
-            to: email,
-            subject: `AltPay: Payment Confirmation`,
-            text: `Good news! ${friendName} has paid ₹${amount} on your behalf. Visit the app for details.`,
-        };
-
-        const info = await transporter.sendMail(mailOptions);
-        res.json({ success: true, messageId: info.messageId });
-    } catch (error) {
-        console.error("Email sending failed:", error.message);
-        res.status(500).json({ success: false, error: error.message });
+        console.error('Bulk email error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error sending bulk emails', 
+            error: error.message 
+        });
     }
 });
 

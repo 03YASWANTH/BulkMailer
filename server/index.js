@@ -10,8 +10,7 @@ const passport = require('./config/passport');
 //Import Routes
 const authRoutes = require('./routes/auth');
 const friendRoutes = require('./routes/friend');
-// const paymentRoutes = require('./routes/payment');
-const mail = require('./services/mailService');
+const mailRoutes = require('./services/mailService');
 
 
 
@@ -41,8 +40,8 @@ app.get("/", (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/friends', friendRoutes);
-// app.use('/api/payment', paymentRoutes);
-app.use('/api/mail', mail);
+app.use('/api/mail',mailRoutes );
+
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port",process.env.PORT);

@@ -55,20 +55,6 @@ const AddFriendModal = ({ isOpen, onClose, onSubmit, formData, setFormData }) =>
                 required
               />
             </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="upiId">
-                UPI ID
-              </label>
-              <GlassInput
-                id="upiId"
-                name="upiId"
-                placeholder="john@upi"
-                value={formData.upiId}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
           </div>
           
           <div className="mt-8 flex space-x-3">
