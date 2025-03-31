@@ -117,7 +117,7 @@ router.post('/send-bulk-email', authenticateUser, upload.array('attachments'), a
         } else {
             return res.status(200).json({ 
                 success: true, 
-                message: `Successfully sent ${results.sent} emails`, 
+                message: `Successfully sent ${results.sent} email`, 
                 results 
             });
         }
