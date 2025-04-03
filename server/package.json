@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "npx nodemon index.js"
-  },
+  "start": "node index.js",
+  "vercel-start": "node index.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
