@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { StatusCodes } = require('http-status-codes');
-const User = require('../models/User');
+const User = require('../models/user');
 
 const authenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;

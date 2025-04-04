@@ -1,7 +1,7 @@
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
-const User = require('./models/User')
+const User = require('./models/user')
 
 /**
  * Create Gmail transporter with OAuth2 authentication
