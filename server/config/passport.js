@@ -26,12 +26,7 @@ passport.use(
         // Basic Profile and Authentication Scopes
         'profile', 
         'email', 
-        'openid',
-        
-        // Gmail Specific Scopes
-        'https://mail.google.com/',
-        'https://www.googleapis.com/auth/gmail.send',
-        'https://www.googleapis.com/auth/gmail.compose'
+        'openid'
       ],       
       accessType: 'offline', // Required for refresh token       
       prompt: 'consent',     // Forces consent screen every login       
