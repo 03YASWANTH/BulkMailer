@@ -23,7 +23,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const BulkMailer = () => {
-    const BaseUrl = 'bulk-mailer-mej8.vercel.app';
+    const BaseUrl = 'https://bulk-mailer-mej8.vercel.app';
     const navigate = useNavigate();
     const [user, setUser] = useState();
     const [showUserMenu, setShowUserMenu] = useState(false);
