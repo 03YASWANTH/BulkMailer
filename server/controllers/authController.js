@@ -9,7 +9,8 @@ const googleCallback = async (req, res) => {
     if (!user) {
       return res.redirect(`${process.env.FRONTEND_URL}`);
   }
-    const redirectUrl = `${process.env.FRONTEND_URL}/Mail?token=${req.user.accessToken}`;
+  const frontendBaseUrl = process.env.FRONTEND_URL.replace(/\/$/, ''); 
+  const redirectUrl = `${frontendBaseUrl}/Mail?token=${req.user.accessToken}`;
     return res.redirect(redirectUrl);
     
   } catch (error) {
