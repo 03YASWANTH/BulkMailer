@@ -1,5 +1,5 @@
 const axios = require('axios');
-const User = require('../models/User');
+const User = require('../models/user');
 const { StatusCodes } = require('http-status-codes');
 
 const googleCallback = async (req, res) => {
