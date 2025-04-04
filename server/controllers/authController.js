@@ -4,17 +4,18 @@ const { StatusCodes } = require('http-status-codes');
 
 const googleCallback = async (req, res) => {
   try {
-
     let user = await User.findOne({ googleId: req.user.googleId });
     if (!user) {
       return res.redirect(`${process.env.FRONTEND_URL}`);
-  }
-  const frontendBaseUrl = process.env.FRONTEND_URL.replace(/\/$/, ''); 
-  const redirectUrl = `${frontendBaseUrl}/Mail?token=${req.user.accessToken}`;
-    return res.redirect(redirectUrl);
+    }
+
+    const frontendBaseUrl = process.env.FRONTEND_URL.replace(/\/$/, ''); // remove trailing slash
+    const redirectUrl = `${frontendBaseUrl}/Mail?token=${req.user.accessToken}`;
     
+    return res.redirect(redirectUrl);
+
   } catch (error) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    return res.status(500).json({
       success: false,
       message: 'Google authentication failed',
       error: error.message
