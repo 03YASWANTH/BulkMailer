@@ -138,7 +138,7 @@ const EmailComposerPreview = () => {
 // Main App component
 const BulkMailerApp = () => {
   const [scrolled, setScrolled] = useState(false);
-  const BASE_URL = "http://localhost:3000/api";
+  const BASE_URL = "bulk-mailer-mej8.vercel.app/api";
   const SignIn = () => {
     window.open(`${BASE_URL}/auth/google`, "_self");
   }

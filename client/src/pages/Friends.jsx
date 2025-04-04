@@ -120,7 +120,7 @@ const FriendsPage = () => {
     email: ''
   });
 
-  const BaseUrl = 'http://localhost:3000';
+  const BaseUrl = 'bulk-mailer-mej8.vercel.app';
 
   useEffect(() => {
     fetchFriends();
