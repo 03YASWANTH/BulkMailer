@@ -4,27 +4,8 @@ const { StatusCodes } = require('http-status-codes');
 
 const googleCallback = async (req, res) => {
   try {
-    // ✅ Fix: Get accessToken from req.user directly
-    const access_token = req.user.accessToken;
-    console.log(req.user.refreshToken);
 
-    if (!access_token) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Access token is missing",
-      });
-    }
-
-    // Fetch user info from Google
-    const googleResponse = await axios.get(
-      'https://www.googleapis.com/oauth2/v3/userinfo', 
-      { headers: { Authorization: `Bearer ${access_token}` } }
-    );
-
-    const googleUser = googleResponse.data;
-
-    // Find or create user in database
-    let user = await User.findOne({ googleId: googleUser.sub });
+    let user = await User.findOne({ googleId: req.user.googleId });
     if (!user) {
       return res.redirect(`${process.env.FRONTEND_URL}`);
   }
